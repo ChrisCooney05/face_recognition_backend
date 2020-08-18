@@ -1,7 +1,10 @@
 const express = require("express");
 const app = express();
+const bcrypt = require("bcrypt-nodejs");
+const cors = require("cors");
 
 app.use(express.json());
+app.use(cors());
 
 const database = {
   user: [
@@ -25,7 +28,7 @@ const database = {
 };
 
 app.get("/", (req, res) => {
-  res.json(database);
+  res.json(database.user);
 });
 
 app.post("/signin", (req, res) => {
@@ -80,11 +83,3 @@ app.put("/image", (req, res) => {
 });
 
 app.listen(3000);
-
-/*
-/ --> possible redirect 
-/signin --> POST = success/reject
-/register --> POST = user object
-/profile/:id --> GET = user object
-/image --> PUT = user object
-*/
