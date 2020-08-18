@@ -36,7 +36,7 @@ app.post("/signin", (req, res) => {
     req.body.email === database.user[0].email &&
     req.body.password === database.user[0].password
   ) {
-    res.json(database.users[0]);
+    res.json(database.user[0]);
   } else {
     res.status(400).json("Sorry, wrong password/email");
   }
@@ -76,7 +76,7 @@ app.put("/image", (req, res) => {
       return res.json(user.entries);
     }
   });
-  if (!found) {
+  if (!id) {
     res.status(400).json("user not found");
   }
 });
