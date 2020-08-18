@@ -22,12 +22,21 @@ const database = {
   ],
 };
 
+app.use(express.json());
+
 app.get("/", (req, res) => {
   res.send("Testing");
 });
 
 app.post("/signin", (req, res) => {
-  res.json("Signing in");
+  if (
+    req.body.email === database.user[0].email &&
+    req.body.password === database.user[0].password
+  ) {
+    res.json("success");
+  } else {
+    res.status(400).json("Sorry, wrong password/email");
+  }
 });
 
 app.listen(3000);
