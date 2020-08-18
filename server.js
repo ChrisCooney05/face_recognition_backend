@@ -66,6 +66,19 @@ app.get("/profile/:id", (req, res) => {
   }
 });
 
+app.put("/image", (req, res) => {
+  const { id } = req.body;
+  database.user.forEach(user => {
+    if (user.id === id) {
+      user.entries++;
+      return res.json(user.entries);
+    }
+  });
+  if (!found) {
+    res.status(400).json("user not found");
+  }
+});
+
 app.listen(3000);
 
 /*
