@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 const database = {
   user: [
     {
@@ -22,8 +24,6 @@ const database = {
   ],
 };
 
-app.use(express.json());
-
 app.get("/", (req, res) => {
   res.send("Testing");
 });
@@ -37,6 +37,19 @@ app.post("/signin", (req, res) => {
   } else {
     res.status(400).json("Sorry, wrong password/email");
   }
+});
+
+app.post("/register", (req, res) => {
+  const { email, name, password } = req.body;
+  database.user.push({
+    id: 125,
+    name: name,
+    email: email,
+    password: password,
+    entries: 0,
+    joined: new Date(),
+  });
+  res.json(database.user[database.user.length - 1]);
 });
 
 app.listen(3000);
