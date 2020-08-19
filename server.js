@@ -18,10 +18,6 @@ app.use(express.json());
 app.use(cors());
 
 
-app.get("/", (req, res) => {
-  res.json(database.user);
-});
-
 app.post("/signin", (req, res) => {
   const { email, password } = req.body
   db.select('email', 'hash')
