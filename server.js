@@ -2,6 +2,17 @@ const express = require("express");
 const app = express();
 const bcrypt = require("bcrypt-nodejs");
 const cors = require("cors");
+const knex = require("knex");
+
+const db = knex({
+  client: "pg",
+  connection: {
+    host: "127.0.0.1",
+    user: "chriscooney",
+    password: "",
+    database: "face_reco",
+  },
+});
 
 app.use(express.json());
 app.use(cors());
@@ -44,13 +55,13 @@ app.post("/signin", (req, res) => {
 
 app.post("/register", (req, res) => {
   const { email, name, password } = req.body;
-  database.user.push({
-    id: "125",
-    name: name,
-    email: email,
-    entries: 0,
-    joined: new Date(),
-  });
+  db("users")
+    .insert({
+      email: email,
+      name: name,
+      joined: new Date(),
+    })
+    .then(console.log);
   res.json(database.user[database.user.length - 1]);
 });
 
