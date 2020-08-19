@@ -3,7 +3,6 @@ const app = express();
 const bcrypt = require("bcrypt-nodejs");
 const cors = require("cors");
 const knex = require("knex");
-const { response } = require("express");
 
 const db = knex({
   client: "pg",
@@ -18,40 +17,36 @@ const db = knex({
 app.use(express.json());
 app.use(cors());
 
-const database = {
-  user: [
-    {
-      id: "123",
-      name: "Chris Cooney",
-      email: "testing@test.co.uk",
-      password: "Password",
-      entries: 0,
-      joined: new Date(),
-    },
-    {
-      id: "124",
-      name: "Laura Cooney",
-      email: "testing_Laura@test.co.uk",
-      password: "Password",
-      entries: 0,
-      joined: new Date(),
-    },
-  ],
-};
 
 app.get("/", (req, res) => {
   res.json(database.user);
 });
 
 app.post("/signin", (req, res) => {
-  if (
-    req.body.email === database.user[0].email &&
-    req.body.password === database.user[0].password
-  ) {
-    res.json(database.user[0]);
-  } else {
-    res.status(400).json("Sorry, wrong password/email");
-  }
+  const { email, password } = req.body
+  db.select('email', 'hash')
+    .from('login')
+    .where({
+      email: email
+    })
+    .then(data => {
+      const isValid = bcrypt.compareSync(password, data[0].hash)
+      if (isValid) {
+        db.select('*')
+          .from('users')
+          .where({
+            email: email
+          })
+          .then(user => {
+            res.json(user[0])
+          })
+          .catch(err => {
+            res.status(400).json('unable to get user')
+          })
+      } else {
+        res.status(400).json('wrong log in details')
+      }
+    })
 });
 
 app.post("/register", (req, res) => {
