@@ -3,6 +3,7 @@ const app = express();
 const bcrypt = require("bcrypt-nodejs");
 const cors = require("cors");
 const knex = require("knex");
+const { response } = require("express");
 
 const db = knex({
   client: "pg",
@@ -56,13 +57,15 @@ app.post("/signin", (req, res) => {
 app.post("/register", (req, res) => {
   const { email, name, password } = req.body;
   db("users")
+    .returning("*")
     .insert({
       email: email,
       name: name,
       joined: new Date(),
     })
-    .then(console.log);
-  res.json(database.user[database.user.length - 1]);
+    .then(response => {
+      res.json(response);
+    });
 });
 
 app.get("/profile/:id", (req, res) => {
