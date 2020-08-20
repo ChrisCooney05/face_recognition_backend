@@ -6,7 +6,7 @@ const knex = require("knex");
 const handleSignIn = require('./controllers/signIn')
 const handleRegistration = require('./controllers/register')
 const handleProfileId = require('./controllers/profile')
-const handleEntries = require('./controllers/image')
+const { handleEntries, handleApiCall } = require('./controllers/image')
 
 const db = knex({
   client: "pg",
@@ -36,6 +36,10 @@ app.get("/profile/:id", (req, res) => {
 
 app.put("/image", (req, res) => {
   handleEntries(req, res, db)
+});
+
+app.post("/imageurl", (req, res) => {
+  handleApiCall(req, res)
 });
 
 app.listen(3000);
