@@ -26,7 +26,7 @@ function handleRegistration(req, res, bcrypt, db) {
         .then(trx.commit)
         .catch(trx.rollback);
     }).catch(err => {
-      res.status(400).json("unable to register");
+      res.status(400).json(err);
     });
   }
 }
