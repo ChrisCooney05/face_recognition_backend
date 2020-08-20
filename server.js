@@ -3,6 +3,7 @@ const app = express();
 const bcrypt = require("bcrypt-nodejs");
 const cors = require("cors");
 const knex = require("knex");
+const handleSignIn = require('./controllers/signIn')
 
 const db = knex({
   client: "pg",
@@ -19,30 +20,7 @@ app.use(cors());
 
 
 app.post("/signin", (req, res) => {
-  const { email, password } = req.body
-  db.select('email', 'hash')
-    .from('login')
-    .where({
-      email: email
-    })
-    .then(data => {
-      const isValid = bcrypt.compareSync(password, data[0].hash)
-      if (isValid) {
-        db.select('*')
-          .from('users')
-          .where({
-            email: email
-          })
-          .then(user => {
-            res.json(user[0])
-          })
-          .catch(err => {
-            res.status(400).json('unable to get user')
-          })
-      } else {
-        res.status(400).json('wrong log in details')
-      }
-    })
+  handleSignIn(req, res, bcrypt, db)
 });
 
 app.post("/register", (req, res) => {
