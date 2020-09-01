@@ -12,21 +12,19 @@ function handleSignIn(req, res, bcrypt, db) {
         res.json({ msg: 'unable to get user' })
       })
       .then(data => {
-        if (data[0].hash) {
-          const isValid = bcrypt.compareSync(password, data[0].hash)
-          if (isValid) {
-            db.select('*')
-              .from('users')
-              .where({
-                email: email
-              })
-              .then(user => {
-                res.json(user[0])
-              })
-              .catch(err => {
-                res.json({ msg: 'unable to get user' })
-              })
-          }
+        const isValid = bcrypt.compareSync(password, data[0].hash)
+        if (isValid) {
+          db.select('*')
+            .from('users')
+            .where({
+              email: email
+            })
+            .then(user => {
+              res.json(user[0])
+            })
+            .catch(err => {
+              res.json({ msg: 'unable to get user' })
+            })
         } else {
           res.json({ msg: 'incorrect log in details' })
         }
