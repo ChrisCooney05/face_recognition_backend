@@ -1,7 +1,7 @@
 function handleSignIn(req, res, bcrypt, db) {
   const { email, password } = req.body
   if (!email || !password) {
-    res.status(400).json('incorrect log in details')
+    res.json('incorrect log in details')
   } else {
     db.select('email', 'hash')
       .from('login')
@@ -9,7 +9,7 @@ function handleSignIn(req, res, bcrypt, db) {
         email: email
       })
       .catch(err => {
-        res.status(400).json('unable to get user')
+        res.json('unable to get user')
       })
       .then(data => {
         const isValid = bcrypt.compareSync(password, data[0].hash)
@@ -23,10 +23,10 @@ function handleSignIn(req, res, bcrypt, db) {
               res.json(user[0])
             })
             .catch(err => {
-              res.status(400).json('unable to get user')
+              res.json('unable to get user')
             })
         } else {
-          res.status(400).json('wrong log in details')
+          res.json('wrong log in details')
         }
       })
   }
