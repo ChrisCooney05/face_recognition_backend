@@ -5,7 +5,7 @@ function handleProfileId(req, res, db) {
     .where({
       id: id,
     })
-    .then(user => {
+    .then((user) => {
       if (user.length) {
         res.json(user[0]);
       } else {
